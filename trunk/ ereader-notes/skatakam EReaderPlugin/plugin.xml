@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.6"?>
+<plugin>
+   <extension-point id="jpedal" name="jpedal"/>
+
+<!--define views we use and a PDF view-->
+<extension
+      id="jpedal"
+      name="jpedal"
+      point="org.eclipse.ui.views">
+  <category name="PDF" id="JPedalViewer" /> 
+  <view name="PDFView" icon="icons/icon.gif" category="JPedalViewer" class="org.jpedal.pdf.plugins.eclipse.views.PDFView" id="org.jpedal.pdf.plugins.eclipse.views.PDFView" />
+  <view name="PDFSearch" icon="icons/find.gif" category="JPedalViewer" class="org.jpedal.pdf.plugins.eclipse.views.PDFSearch" id="org.jpedal.pdf.plugins.eclipse.views.PDFSearch" />
+  </extension>
+  
+  <!--perspectve for PDF-->
+  <extension
+        point="org.eclipse.ui.perspectives">
+     <perspective
+           class="org.jpedal.pdf.plugins.eclipse.perspective.PDFPerspective"
+           icon="icons/smpdf.gif"
+           id="org.jpedal.pdf.plugins.eclipse.perspective.PDFPerspective"
+           name="PDFPerspective"/>
+  </extension>
+  
+  <!--the editor we display the PDF in-->
+  <extension
+        point="org.eclipse.ui.editors">
+     <editor
+           class="org.jpedal.pdf.plugins.eclipse.editors.PDFEditor"
+           default="true"
+           extensions="pdf"
+           filenames="pdf"
+           icon="icons/smpdf.gif"
+           contributorClass="org.jpedal.pdf.plugins.eclipse.editors.PDFEditorContributor"
+           id="org.jpedal.pdf.plugins.eclipse.editors.PDFEditor"
+           name="PDFEditor"/>
+  </extension>
+  
+  <!--new way to add menu and keyboard shortcut from 3.3-->
+  
+  <!--define the command-->
+  <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="PDF viewer"
+            id="test.commands.category">
+      </category>
+      <command
+            name="Bookmarked PDFs"
+            categoryId="test.commands.category"
+            id="pdfviewer.commands.Bookmark">
+      </command>
+      <command
+            name="Next Page"
+            categoryId="test.commands.category"
+            id="pdfviewer.commands.NextPage">
+      </command>
+      <command
+            name="Previous Page"
+            categoryId="test.commands.category"
+            id="pdfviewer.commands.PreviousPage">
+      </command>
+   </extension>
+   
+   <!-- the code which executes the command (Assigns handler to a command)-->
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="pdfviewer.commands.Bookmark"
+            class="org.jpedal.pdf.plugins.eclipse.handlers.PDFHandler">
+      </handler>
+      <handler
+            commandId="pdfviewer.commands.NextPage"
+            class="org.jpedal.pdf.plugins.eclipse.handlers.PDFHandler">
+      </handler>
+      <handler
+            commandId="pdfviewer.commands.PreviousPage"
+            class="org.jpedal.pdf.plugins.eclipse.handlers.PDFHandler">
+      </handler>
+   </extension>
+   
+   <!--keyboard shortcut (Assign shortcut to command)-->
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="pdfviewer.commands.Bookmark"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="Ctrl+shift+D"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            commandId="pdfviewer.commands.NextPage"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="Ctrl+shift+."
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            commandId="pdfviewer.commands.PreviousPage"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="Ctrl+shift+,"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+   
+   <!--add as menu item-->
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="Bookmarked PDFs"
+               id="test.menus.sampleMenu">
+            <command
+                  commandId="pdfviewer.commands.Bookmark"
+                  id="pdfviewer.menus.Bookmark">
+            </command>
+         </menu>
+      </menuContribution>
+      
+      <!--and as toolbar-->
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="pdfviewer.toolbars.pdfToolbar">
+            <command
+                  commandId="pdfviewer.commands.Bookmark"
+                  icon="icons/smpdf.gif"
+                  tooltip="Bookmarked PDFs"
+                  id="pdfviewer.toolbars.Bookmark">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+</plugin>
