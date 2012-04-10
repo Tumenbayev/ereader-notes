@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: EReaderPlugin
+Bundle-SymbolicName: EReaderPlugin;singleton:=true
+Bundle-Version: 20120212
+Bundle-ClassPath: .,bcprov.jar,jpedal.jar
+Bundle-Activator: org.jpedal.pdf.plugins.eclipse.Activator
+Export-Package: org.jpedal.pdf.plugins.eclipse,org.jpedal.pdf.plugins.
+ eclipse.editors,org.jpedal.pdf.plugins.eclipse.handlers,org.jpedal.pd
+ f.plugins.eclipse.perspective,org.jpedal.pdf.plugins.eclipse.res,org.
+ jpedal.pdf.plugins.eclipse.settings,org.jpedal.pdf.plugins.eclipse.vi
+ ews
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.eclipse.ui
+ .views,org.eclipse.ui.ide;visibility:=reexport,org.eclipse.core.files
+ ystem,org.eclipse.ui,org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: iCarnegie, Inc.
+
