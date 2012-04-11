@@ -1,6 +1,8 @@
 package ereader;
 import java.awt.Rectangle;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 import db.MysqlConnect;
@@ -96,10 +98,13 @@ public class NotesDAO {
 		return isDeleted;
 	}
 	
-	public boolean viewNotes() throws SQLException {
+	public ArrayList viewNotes() throws SQLException {
 		boolean isViewed = false;
 		// Our code goes here
 				// data base connection should be established and tables should be called
+		Note notes=new Note();
+		ArrayList<Note> notesList = new ArrayList<Note>();
+		
 		Connection conn  = conect.connect();
 		Statement statement = conn.createStatement();
 		String QString = "select * from notes";
@@ -107,6 +112,22 @@ public class NotesDAO {
 		  while(rs.next())
 		  {
 			  System.out.println(" noteid: "+rs.getString("notesid")+"\n content:"+rs.getString("content")+"\n Author: "+rs.getString("author"));
+
+			  	notes.setNoteid(rs.getString("notesid"));
+				notes.setText(rs.getString("content"));
+				notes.setAuthor(rs.getString("author"));
+				notes.setDocid(null);
+				notes.setPageNumber(rs.getInt("page"));
+				notes.setRating(rs.getInt("rating"));
+				notes.setStatus(rs.getString("status"));
+				notes.setArea(rs.getString("area"));
+				notes.setUid(rs.getString("uid"));
+				Date d = rs.getDate("date");
+				 		
+				notes.setDate(d);
+				
+				notesList.add(notes);
+			  
 			  System.out.println("------");
 		  }
 		  isViewed=true;
@@ -114,7 +135,28 @@ public class NotesDAO {
 		  statement.close();
 		conect.CloseConnection(conn);
 		System.out.println(" Notes is isViewed" + isViewed);
-		return isViewed;
+		return notesList;
+	}
+	
+	public boolean sortNotes() throws SQLException {
+		boolean isSorted = false;
+		
+		Connection conn  = conect.connect();
+		Statement statement = conn.createStatement();
+		String QString = "select * from notes";
+		  ResultSet rs= statement.executeQuery(QString);
+		  while(rs.next())
+		  {
+			 // System.out.println(" noteid: "+rs.getString("notesid")+"\n content:"+rs.getString("content")+"\n Author: "+rs.getString("author"));
+			  System.out.println("------");
+		  }
+		  isSorted=true;
+		  rs.close();
+		  statement.close();
+		conect.CloseConnection(conn);
+		System.out.println(" Notes is isSorted" + isSorted);
+		
+		return isSorted;
 	}
 
 }

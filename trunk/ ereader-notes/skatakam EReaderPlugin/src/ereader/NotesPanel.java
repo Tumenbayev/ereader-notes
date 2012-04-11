@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -249,7 +250,12 @@ public class NotesPanel extends JPanel {
 							JOptionPane.YES_NO_OPTION);
 				}
 				if (response == JOptionPane.YES_OPTION || response == JOptionPane.OK_OPTION) {
-					eReader.notesPanelDeleteClicked(note);
+					try {
+						eReader.notesPanelDeleteClicked(note);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		}
@@ -340,7 +346,12 @@ public class NotesPanel extends JPanel {
 			int i = model.getColumnIndexAtX(e.getPoint().x);
             int index = model.getColumn(i).getModelIndex();
             String header = notesTable.getHeaders()[index];
-            eReader.sortNotes(header.toLowerCase());
+            try {
+				eReader.sortNotes(header.toLowerCase());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 }

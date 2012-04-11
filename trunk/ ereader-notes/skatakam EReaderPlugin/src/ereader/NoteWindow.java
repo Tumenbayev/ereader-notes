@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -152,7 +153,7 @@ public class NoteWindow extends JFrame {
 		// if this is an existing note, add text from note, make some fields read-only
 		if (newNote == false) {
 			noteTextArea.setText(note.getText());
-			authorField.setEditable(false);
+			authorField.setEditable(true);// $ $			
 			noteTextArea.setEditable(false);
 		}
 		
@@ -175,7 +176,12 @@ public class NoteWindow extends JFrame {
 				note.setRating(ratingSlider.getValue());
 				
 				// call the eReader 
-				eReader.noteWindowSaveClicked(note, newNote);
+				try {
+					eReader.noteWindowSaveClicked(note, newNote);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 			} // else if Cancel, nothing to do
 			

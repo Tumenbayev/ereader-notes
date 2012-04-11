@@ -119,6 +119,8 @@ public class EReaderDelegateProj6 extends EReaderDelegate {
 	/** 
 	 * Called by the eReader to request this delegate to sort the notes collection
 	 * by the given key. 
+	 *
+	$$
 	 */
 	public void sortNotes(String key) 
 	{
