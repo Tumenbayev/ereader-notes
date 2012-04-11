@@ -1,5 +1,7 @@
 package ereader;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class NotesController {
@@ -29,7 +31,7 @@ public class NotesController {
 		return dao.deleteNotes(noteid);
 	}
 	
-	public boolean viewNotes() throws SQLException {
+	public ArrayList viewNotes() throws SQLException {
 		return dao.viewNotes();
 	}
 	

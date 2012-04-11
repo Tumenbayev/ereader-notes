@@ -1,11 +1,6 @@
 package ereader;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.*;
-import java.awt.Component;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -17,9 +12,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -86,6 +85,7 @@ public class EReader {
 	private File notesFile;
 	private ArrayList<Note> notesList = new ArrayList<Note>();
 	
+	NotesController nc= new NotesController();
 	/*
 	 * public API for the Eclipse plugin
 	 */
@@ -104,6 +104,8 @@ public class EReader {
 		swingGUI = simpleViewer.currentGUI;
 		pdfDecoder = swingGUI.getPdfDecoder();
 		delegate = EReaderDelegate.createEReaderDelegate(this);
+		
+		
 	}
 	
 	/** filename
@@ -254,9 +256,10 @@ public class EReader {
 	 * notes file, initializes the collection of notes with the notes read from the file, 
 	 * initializes the icons on the notes icon bar, and then calls the delegate's 
 	 * <code>documentLoaded</code> method.
+	 * @throws SQLException 
 	 * 
 	 */
-	void documentLoaded(String filename) {		
+	void documentLoaded(String filename) throws SQLException {		
 		readNotesFile();
 		
 		// init notes bar
@@ -305,7 +308,9 @@ public class EReader {
 		//System.out.println("EReader.notesPanelAddClicked");
 		
 		// create a new note
-		Note newNote = new Note(System.getProperty("user.name"), new Date());
+		Note newNote = new Note();
+		newNote.setAuthor(System.getProperty("user.name"));
+		newNote.setDate(new Date());
 		int pgno = getPageNumber();
 		newNote.setPageNumber(pgno);
 	    int pageHeight = pdfDecoder.getPdfPageData().getMediaBoxHeight(pgno);
@@ -360,8 +365,9 @@ public class EReader {
 	 * notes table.
 	 * It then calls the delegate to delete the note. After the delegate is called,
 	 * then the notes are saved.
+	 * @throws SQLException 
 	 */
-	void notesPanelDeleteClicked(Note note) {
+	void notesPanelDeleteClicked(Note note) throws SQLException {
 		//System.out.println("EReader.notesPanelDeleteClicked: note = " + 
 		//		note.toShortString());
 
@@ -408,8 +414,9 @@ public class EReader {
 	 * new, then the notes panel is updated to display any changes to the note and the
 	 * delegate is not called. In all cases, the notes are saved to the document's notes 
 	 * file.
+	 * @throws SQLException 
 	 */
-	void noteWindowSaveClicked(Note note, boolean newNote) {
+	void noteWindowSaveClicked(Note note, boolean newNote) throws SQLException {
 		
 		// if this is a new note, ask delegate to add note and set new note counts,
 		// then update icon bar and notes panel with note.
@@ -431,8 +438,9 @@ public class EReader {
 	 * Sorts the notes, based on the given key, by calling the delegate to do the sort.
 	 * After the delegate is called, the selection in notes table is cleared, and
 	 * the notes are saved to the document's notes file.
+	 * @throws SQLException 
 	 */
-	void sortNotes(String key) {
+	void sortNotes(String key) throws SQLException {
 		
 		// originally sorting was done here, now it is done in the delegate
 		delegate.sortNotes(key);
@@ -449,12 +457,13 @@ public class EReader {
 
 	/* methods for reading & writing to the document's notes file */
 	
-	/** Reads the document's notes file and sets the notes collection. */
+	/** Reads the document's notes file and sets the notes collection. 
+	 * @throws SQLException */
 	@SuppressWarnings("unchecked")
-	private void readNotesFile() {
+	private void readNotesFile() throws SQLException {
 		notesList.clear();
 		
-		// compute path to notes file
+	/*	// compute path to notes file
 		String fn = getFilename();
 		if (fn.toLowerCase().endsWith(".pdf") == false) {
 			System.out.println(
@@ -475,10 +484,10 @@ public class EReader {
 			//	+ notesFilename);
 			return;
 		}
-		
+		*/
 		// notes file does exist, read notes
 		Object obj = null;
-		try {
+	/*	try {
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(notesFile));
 			obj = in.readObject();
 			if (obj instanceof ArrayList<?>) {
@@ -496,21 +505,37 @@ public class EReader {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}
+		}*/
+		Note notes = new Note();
+		notesList = nc.viewNotes();
+		
 	}
 	
-	/** Writes the notes collection to to the document's notes file. */
-	private void writeNotesFile() {
+	/** Writes the notes collection to to the document's notes file. 
+	 * @throws SQLException */
+	//$
+	private void writeNotesFile() throws SQLException {
 		if (notesFile == null) {
 			return;
 		}
-		try {
+		/*try {
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(notesFile));
 			out.writeObject(notesList);
 			out.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+		*/
+		Note notes = new Note();
+		
+		Iterator<Note> it = notesList.iterator();
+		
+		while(it.hasNext())
+		{
+			notes=(Note) it.next();
+			nc.addNotes(notes);
+		}
+		
 	}
 	
 	/* methods for creating eReader UI components */
@@ -718,11 +743,14 @@ public class EReader {
 	 */
 	private void invokeDocumentLoaded() {
 		final String filename = getFilename();
-		//!*!
-		//System.out.println("•	the filename of the document that was loaded: "+filename);
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				documentLoaded(filename);
+				try {
+					documentLoaded(filename);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}

@@ -3,7 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: EReaderPlugin
 Bundle-SymbolicName: EReaderPlugin;singleton:=true
 Bundle-Version: 20120212
-Bundle-ClassPath: .,bcprov.jar,jpedal.jar
+Bundle-ClassPath: .,
+ bcprov.jar,
+ jpedal.jar,
+ mysql-connector-java-3.1.11-bin.jar
 Bundle-Activator: org.jpedal.pdf.plugins.eclipse.Activator
 Export-Package: org.jpedal.pdf.plugins.eclipse,org.jpedal.pdf.plugins.
  eclipse.editors,org.jpedal.pdf.plugins.eclipse.handlers,org.jpedal.pd

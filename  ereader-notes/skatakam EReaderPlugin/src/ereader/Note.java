@@ -40,6 +40,16 @@ public class Note implements Serializable {
 	String status;
 	String area;
 	
+
+	/**
+	 * Creates a note with the given author and date.
+	 */
+/*
+	public Note() {
+		this.author = author;
+		this.date = date;
+	}
+	*/
 	
 	/**
 	 * @return the area
@@ -125,17 +135,6 @@ public class Note implements Serializable {
 		this.status = status;
 	}
 
-
-	
-
-	/**
-	 * Creates a note with the given author and date.
-	 */
-	public Note(String author, Date date) {
-		this.author = author;
-		this.date = date;
-	}
-	
 	/** Returns the author. */
 	public String getAuthor() {
 		return author;
@@ -144,6 +143,11 @@ public class Note implements Serializable {
 	/** Sets the author for this note. */
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+	
+	/** Sets the date for this note. */
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
 	/** Returns the date. */
